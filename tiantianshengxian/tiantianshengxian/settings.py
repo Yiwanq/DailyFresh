@@ -109,5 +109,3 @@ STATICFILES_DIRS = [
 
 
 
-
-
