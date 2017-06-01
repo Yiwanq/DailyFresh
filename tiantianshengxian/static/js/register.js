@@ -48,8 +48,20 @@ $(function(){
 		}
 		else
 		{
-			$('#user_name').next().hide();
-			error_name = false;
+			$.get('/user/register_exist/?name=' + $('#user_name').val(), function (data)
+			{
+				if(data.num > 0)
+				{
+					$('#user_name').next().html('用户名已存在').show()
+					error_name = true;
+				}
+				else
+					{
+					$('#user_name').next().hide();
+					error_name = false;
+				}
+            })
+
 		}
 	}
 

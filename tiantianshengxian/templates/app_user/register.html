@@ -1,8 +1,9 @@
 {% extends 'head_tail_base.html' %}
 
-    {% block title %}
-	<title>天天生鲜-注册</title>
-    {% endblock title %}
+    {% block add %}
+        <script src="/static/js/jquery-1.12.4.min.js"></script>
+        <script src="/static/js/register.js"></script>
+    {% endblock %}
 
     {% block con %}
 	<div class="register_con">
@@ -17,8 +18,8 @@
 				<h1>用户注册</h1>
 				<a href="/user/login/">登录</a>
 			</div>
-			<div class="reg_form clearfix">
-				<form>
+			<div class="reg_form clearfix" id="reg_form">
+				<form method="post" action="/user/register_yz/">
                     {%csrf_token%}
 				<ul>
 					<li>

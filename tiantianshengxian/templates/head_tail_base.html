@@ -2,17 +2,17 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
 	<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
-
-    {%block title%}
-    {%endblock title%}
-
+    <title>天天生鲜-{{ title }}</title>
 	<link rel="stylesheet" type="text/css" href="/static/css/reset.css">
 	<link rel="stylesheet" type="text/css" href="/static/css/main.css">
+
+    {% block add %}
+    {% endblock add %}
+
 </head>
 <body>
 
 {%block con%}
-这是区域一，有默认值
 {%endblock con%}
 
 <div class="footer no-mp">
