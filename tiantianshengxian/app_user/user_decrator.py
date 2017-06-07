@@ -1,15 +1,17 @@
 # coding:utf-8
 # from django.shortcuts import redirect
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect,JsonResponse
 
 def login(inner):
     def log_fun(request,*arg,**kwargs):
         if request.session.has_key('user_id'):
             return inner(request,*arg,**kwargs)
         else:
-            red = HttpResponseRedirect('/user/login/')
-            red.set_cookie('url', request.get_full_path())
-            return red
+            if request.is_ajax():
+                return JsonResponse({'is_login':1})
+            return HttpResponseRedirect('/user/login/')
+            # red.set_cookie('url', request.get_full_path())
+            # return red
     return log_fun
 
 '''

@@ -26,19 +26,19 @@
                         {% csrf_token %}
 						<div class="form_group">
 							<label>收件人：</label>
-							<input type="text" name="ushou" value="{{ user.ushou }}">
+							<input type="text" name="ushou" value="">
 						</div>
 						<div class="form_group form_group2">
 							<label>详细地址：</label>
-							<textarea class="site_area" name="uaddress">{{ user.uaddress }}</textarea>
+							<textarea class="site_area" name="uaddress"></textarea>
 						</div>
 						<div class="form_group">
 							<label>邮编：</label>
-							<input type="text" name="uemail" value="{{ user.uemail }}">
+							<input type="text" name="uemail" value="">
 						</div>
 						<div class="form_group">
 							<label>手机：</label>
-							<input type="text" name="uphone" value="{{ user.uphone }}">
+							<input type="text" name="uphone" value="">
 						</div>
 
 						<input type="submit" name="" value="提交" class="info_submit">

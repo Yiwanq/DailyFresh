@@ -232,6 +232,10 @@ html,body{height:100%}
 	border:1px solid #ededed;
 	margin:0 auto 20px;
 }
+.search{
+	width:1177px;
+	margin:0 auto 20px;
+}
 
 .goods_detail_pic{width:350px;height:350px;margin:24px 0 0 24px;}
 .goods_detail_list{

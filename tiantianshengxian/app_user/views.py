@@ -4,6 +4,8 @@ from django.http import JsonResponse, HttpResponseRedirect
 from models import User
 from hashlib import sha1
 import user_decrator
+from app_goods.models import *
+from app_cart.models import *
 
 # Create your views here.
 def login(request):
@@ -25,9 +27,9 @@ def login_yz(request):
         print s01.hexdigest()
         if users[0].upwd == s01.hexdigest():
 
-            url = request.COOKIES.get('url','/user/user_center_info/') # 记住用户上次的页面
+            url = request.COOKIES.get('red_url','/user/user_center_info/') # 记住用户上次的页面
             red = HttpResponseRedirect(url) # 重新定向
-            red.set_cookie('url','',max_age=-1)
+            red.set_cookie('red_url','',max_age=-1)
             if jizhu == 0:
                 red.set_cookie('uname','',max_age=-1)
             else:
@@ -42,9 +44,9 @@ def login_yz(request):
         context = {'title': '登录', 'error_name': 1, 'error_pwd': 0, 'uname': uname, 'upwd': upwd}
         return render(request, 'app_user/login.html', context)
 
-def login_out(request):
+def logout(request):
     request.session.flush()
-    return render('/')
+    return redirect('/goods/')
 
 def register(request):
     return render(request, 'app_user/register.html', {'title':'注册'})
@@ -72,7 +74,7 @@ def register_exist(request):
     num = num.count()
     return JsonResponse({'num':num})
 
-@user_decrator.login
+# @user_decrator.login
 def user_center_info(request):
     uid = request.session.get('user_id')
     user = User.objects.filter(pk = uid)
@@ -80,15 +82,26 @@ def user_center_info(request):
     uaddress = user[0].uaddress
     uphone = user[0].uphone
     uemail = user[0].uemail
-    context={'title':'用户中心','uname':uname ,'uaddress':uaddress,'uphone':uphone,'uemail':uemail}
+
+    li = request.COOKIES.get('liulan','')
+    liulan = li.split(',')
+    glist = []
+    if liulan != ['']:
+        print liulan
+        for i in liulan:
+            goods = GoodsInfo.objects.filter(pk = int(i))
+            glist.append(goods[0])
+    goods_num = CartInfo.objects.filter(user_id=uid).count()
+    context={'title':'用户中心','uname':uname ,'uaddress':uaddress,'uphone':uphone,'uemail':uemail,'glist':glist,'goods_num':goods_num}
     return render(request, 'app_user/user_center_info.html',context)
 
-@user_decrator.login
+# @user_decrator.login
 def user_center_order(request):
-    context = {'title': '用户中心'}
+    goods_num = CartInfo.objects.filter(user_id=request.session.get('user_id')).count()
+    context = {'title': '用户中心','goods_num':goods_num}
     return render(request, 'app_user/user_center_order.html',context)
 
-@user_decrator.login
+# @user_decrator.login
 def user_center_site(request):
     # 先在数据库中读取数据,再获取 POST 数据 填充 user 信息
     user = User.objects.get(pk = request.session['user_id'])
@@ -100,7 +113,8 @@ def user_center_site(request):
         user.uphone = post.get('uphone')
         user.uemail = post.get('uemail')
         user.save()
-    context = {'title': '用户中心', 'user': user}
+    goods_num = CartInfo.objects.filter(user_id=request.session.get('user_id')).count()
+    context = {'title': '用户中心', 'user': user,'goods_num':goods_num}
     return render(request, 'app_user/user_center_site.html',context)
 
 
