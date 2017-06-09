@@ -6,6 +6,8 @@ from hashlib import sha1
 import user_decrator
 from app_goods.models import *
 from app_cart.models import *
+from app_order.models import *
+from django.core.paginator import Paginator
 
 # Create your views here.
 def login(request):
@@ -20,11 +22,11 @@ def login_yz(request):
     jizhu = info.get('jizhu', 0)  # 值可以取到
 
     users = User.objects.filter(uname=uname) # filter 是集合
-    print users  # 数据库用户也可以取到
+    # print users  # 数据库用户也可以取到
     if len(users) == 1:
         s01 = sha1()
         s01.update(upwd)
-        print s01.hexdigest()
+        # print s01.hexdigest()
         if users[0].upwd == s01.hexdigest():
 
             url = request.COOKIES.get('red_url','/user/user_center_info/') # 记住用户上次的页面
@@ -34,6 +36,9 @@ def login_yz(request):
                 red.set_cookie('uname','',max_age=-1)
             else:
                 red.set_cookie('uname', uname)
+                red.set_cookie('test', 1)
+                red.set_cookie('test2', '1')
+
             request.session['user_id'] = users[0].id
             request.session['user_name'] = uname
             return red
@@ -46,6 +51,8 @@ def login_yz(request):
 
 def logout(request):
     request.session.flush()
+    print type(request.COOKIES.get('test'))
+    print type(request.COOKIES.get('test2'))
     return redirect('/goods/')
 
 def register(request):
@@ -83,10 +90,10 @@ def user_center_info(request):
     uphone = user[0].uphone
     uemail = user[0].uemail
 
-    li = request.COOKIES.get('liulan','')
-    liulan = li.split(',')
+    liulan = request.COOKIES.get('liulan','')
     glist = []
-    if liulan != ['']:
+    if liulan != '':
+        liulan = liulan.split(',')
         print liulan
         for i in liulan:
             goods = GoodsInfo.objects.filter(pk = int(i))
@@ -98,7 +105,19 @@ def user_center_info(request):
 # @user_decrator.login
 def user_center_order(request):
     goods_num = CartInfo.objects.filter(user_id=request.session.get('user_id')).count()
-    context = {'title': '用户中心','goods_num':goods_num}
+    orders = OrderInfo.objects.all()
+
+    p = request.GET.get('page', '1')
+    pagenator = Paginator(orders, 5)
+    page = pagenator.page(int(p))
+    if p < 1:
+        p = 1
+    elif p > pagenator.num_pages:
+        p = pagenator.num_pages
+    else:
+        p = request.GET.get('page', '1')
+
+    context = {'title': '用户中心','goods_num':goods_num, 'orders':orders, 'page':page}
     return render(request, 'app_user/user_center_order.html',context)
 
 # @user_decrator.login

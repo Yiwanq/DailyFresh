@@ -48,11 +48,11 @@ def detail(request,id):
     context = {'title': '商品详情','list01':list01,'good':good,'goods_num':goods_num,'page_num':1}
     red = render(request, 'app_goods/detail.html', context)
 
-    li = request.COOKIES.get('liulan','')
-    liulan = li.split(',')
-    if liulan == ['']:
+    liulan = request.COOKIES.get('liulan','')
+    if liulan == '':
         red.set_cookie('liulan', id)
     else:
+        liulan = liulan.split(',')
         if id in liulan:
             liulan.remove(id)
         liulan.insert(0, id)

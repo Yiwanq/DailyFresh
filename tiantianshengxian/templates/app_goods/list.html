@@ -29,7 +29,7 @@
 					<div class="operate">
 						<span class="prize">￥{{ good.gprice }}</span>
 						<span class="unit">{{ good.gprice }}/{{ good.gunit }}</span>
-						<a href="/cart/add/?good={{ good.id }}" class="add_goods" title="加入购物车"></a>
+						<a href="/cart/add/" class="add_goods" title="加入购物车"></a>
 					</div>
 				</li>
                 {% endfor %}
@@ -90,4 +90,32 @@
 			</div>
 		</div>
 
+{#  可以留在页面上,不跳转,未完成  #}
+<div class="add_jump"></div>
+	<script type="text/javascript">
+		var $add_x = $('#add_cart').offset().top;
+		var $add_y = $('#add_cart').offset().left;
+
+		var $to_x = $('#show_count').offset().top;
+		var $to_y = $('#show_count').offset().left;
+
+
+		$('.add_goods').click(function(){
+		    var num = $('.num_show').val();
+		    $.get('/cart/add/?count='+num+'&&good={{ good.id }}', function (data) {
+		        if(data.is_login == 1){
+		            location.href='/user/login/'
+                }
+                else{
+		        var num2 = data.goods_num;
+                $('#show_count').html(num2);}
+            });
+			$(".add_jump").css({'left':$add_y+80,'top':$add_x+10,'display':'block'}).animate({
+				'left': $to_y+7,
+				'top': $to_x+7},
+				"fast", function() {
+					$(".add_jump").fadeOut('fast');
+			});
+		})
+	</script>
 {% endblock goods %}

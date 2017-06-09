@@ -26,10 +26,11 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('oid', models.IntegerField()),
-                ('odate', models.DateTimeField()),
+                ('odate', models.DateTimeField(auto_now_add=True)),
                 ('opay_way', models.CharField(max_length=30)),
                 ('is_paid', models.BooleanField(default=False)),
-                ('oaddress', models.CharField(max_length=100)),
+                ('oaddress', models.CharField(max_length=200)),
+                ('oprice', models.DecimalField(max_digits=10, decimal_places=2)),
                 ('ouser', models.ForeignKey(to='app_user.User')),
             ],
         ),

@@ -36,6 +36,7 @@ def add(request):
         # return HttpResponse('ok')
         return redirect('/cart/')  # 应该出现加入购物车的提示面,是否需要继续购物,不能直接返回购物车
 
+
 def change(request):
     id = int(request.GET.get('id'))
     count = int(request.GET.get('count'))

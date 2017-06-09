@@ -8,10 +8,11 @@ from app_goods.models import GoodsInfo
 class OrderInfo(models.Model):
     oid = models.IntegerField()  # 订单编号
     ouser = models.ForeignKey(User)
-    odate = models.DateTimeField()
+    odate = models.DateTimeField(auto_now_add=True)
     opay_way = models.CharField(max_length=30)
     is_paid = models.BooleanField(default=False)
-    oaddress = models.CharField(max_length=100)
+    oaddress = models.CharField(max_length=200)
+    oprice = models.DecimalField(max_digits=10, decimal_places=2)
 
 
 class OrderDetail(models.Model):
