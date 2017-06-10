@@ -77,7 +77,7 @@ def order_handle(request):
     #     return redirect('/goods/')
 
     try:
-        carts = CartInfo.objects.filter(id__in = cartid).filter(user=user) # cartid 是 unicode 编码的数值列表
+        carts = CartInfo.objects.filter(id__in = cartid) # cartid 是 unicode 编码的数值列表
 
         # 应该在购物车栏判断为空
         total = 0
