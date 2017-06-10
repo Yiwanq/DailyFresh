@@ -36,8 +36,6 @@ def login_yz(request):
                 red.set_cookie('uname','',max_age=-1)
             else:
                 red.set_cookie('uname', uname)
-                red.set_cookie('test', 1)
-                red.set_cookie('test2', '1')
 
             request.session['user_id'] = users[0].id
             request.session['user_name'] = uname
@@ -105,7 +103,7 @@ def user_center_info(request):
 # @user_decrator.login
 def user_center_order(request):
     goods_num = CartInfo.objects.filter(user_id=request.session.get('user_id')).count()
-    orders = OrderInfo.objects.all()
+    orders = OrderInfo.objects.filter(ouser_id=request.session.get('user_id'))
 
     p = request.GET.get('page', '1')
     pagenator = Paginator(orders, 5)
