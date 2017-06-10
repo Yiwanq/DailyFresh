@@ -1,0 +1,114 @@
+{% extends 'user_base.html' %}
+
+    {% block user %}
+	<div class="main_con clearfix">
+		<div class="left_menu_con clearfix">
+			<h3>用户中心</h3>
+			<ul>
+				<li><a href="/user/user_center_info/">· 个人信息</a></li>
+				<li><a href="/user/user_center_order/" class="active">· 全部订单</a></li>
+				<li><a href="/user/user_center_site/">· 收货地址</a></li>
+			</ul>
+		</div>
+		<div class="right_content clearfix">
+				<h3 class="common_title2">全部订单</h3>
+				<ul class="order_list_th w978 clearfix">
+					<li class="col01">2016-8-21 17:36:24</li>
+					<li class="col02">订单号：56872934</li>
+					<li class="col02 stress">未支付</li>		
+				</ul>
+                {% for order in orders %}
+				<table class="order_list_table w980">
+					<tbody>
+						<tr>
+							<td width="55%">
+                                {% for detail in order.orderdetail_set.all %}
+								<ul class="order_goods_list clearfix">					
+									<li class="col01"><img src="/static/media/{{ detail.goid.gpic }}"></li>
+									<li class="col02">{{ detail.goid.gtitle|truncatechars:10 }}<em>{{ detail.goid.gprice }}元/{{ detail.goid.gunit }}g</em></li>
+									<li class="col03">{{ detail.goid.gprice }}</li>
+									<li class="col04">{{ detail.price }}元</li>
+								</ul>
+                                {% endfor %}
+							</td>
+							<td width="15%">{{ order.oprice }}元</td>
+                            {% if order.is_paid == True %}
+							<td width="15%">已付款</td>
+							<td width="15%"><a href="#" class="oper_btn">查看物流</a></td>
+                            {% else %}
+                            <td width="15%">待付款</td>
+							<td width="15%"><a href="#" class="oper_btn">去付款</a></td>
+                            {% endif %}
+						</tr>
+					</tbody>
+				</table>
+				
+				<ul class="order_list_th w978 clearfix">
+					<li class="col01">{{ order.odate }}</li>
+					<li class="col02">订单号：{{ order.oid }}</li>
+                    {% if order.is_paid == True %}
+					<li class="col02 stress">已支付</li>
+                    {% else %}
+                    <li class="col02 stress">未支付</li>
+                    {% endif %}
+				</ul>
+                {% empty %}
+                    <ul>暂无订单</ul>
+                {% endfor %}
+
+				<div class="pagenation">
+                {% if page.has_previous %}
+                    <a href="?page=1">首页</a>
+				    <a href="?page={{ page.previous_page_number }}">&lt上一页</a>
+                {% endif %}
+
+                {% if page.paginator.num_pages <= 5 %}
+                    {% for i in page.paginator.page_range %}
+                        {% if i ==  page.number  %}
+                            <a href="" class="active">{{ i }}</a>
+                        {% else %}
+                            <a href="?page={{ i }}">{{ i }}</a>
+                        {% endif %}
+                    {% endfor %}
+                {% else %}
+                    {% if page.number == 1 %}
+                        <a href="" class="active">1</a>
+                        <a href="?page=2">2</a>
+                        <a href="?page=3">3</a>
+                        <a href="?page=4">4</a>
+                        <a href="?page=5">5</a>
+                    {% elif page.number == 2 %}
+                        <a href="?page=1">1</a>
+                        <a href="" class="active">2</a>
+                        <a href="?page=3">3</a>
+                        <a href="?page=4">4</a>
+                        <a href="?page=5">5</a>
+                    {% elif page.number == page.paginator.num_pages|add:-1 %}
+                        <a href="?page={{page.number|add:-3}}">{{page.number|add:-3}}</a>
+                        <a href="?page={{page.number|add:-2}}">{{page.number|add:-2}}</a>
+                        <a href="?page={{page.number|add:-1}}">{{page.number|add:-1}}</a>
+                        <a href="" class="active">{{ page.number }}</a>
+                        <a href="?page={{page.number|add:1}}">{{page.number|add:1}}</a>
+                    {% elif page.number == page.paginator.num_pages%}
+                        <a href="?page={{page.number|add:-4}}">{{page.number|add:-4}}</a>
+                        <a href="?page={{page.number|add:-3}}">{{page.number|add:-3}}</a>
+                        <a href="?page={{page.number|add:-2}}">{{page.number|add:-2}}</a>
+                        <a href="?page={{page.number|add:-1}}">{{page.number|add:-1}}</a>
+                        <a href="" class="active">{{ page.number }}</a>
+                    {% else %}
+                        <a href="?page={{page.number|add:-2}}">{{page.number|add:-2}}</a>
+                        <a href="?page={{page.number|add:-1}}">{{page.number|add:-1}}</a>
+                        <a href="" class="active">{{ page.number }}</a>
+                        <a href="?page={{page.number|add:1}}">{{page.number|add:1}}</a>
+                        <a href="?page={{page.number|add:2}}">{{page.number|add:2}}</a>
+                    {% endif %}
+                {% endif %}
+
+				{% if page.has_next %}
+				    <a href="?page={{page.next_page_number}}">下一页></a>
+                    <a href="?page={{page.paginator.num_pages}}">末页</a>
+                {% endif %}
+			</div>
+		</div>
+	</div>
+ {% endblock user %}
